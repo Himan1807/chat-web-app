@@ -5,7 +5,23 @@ let chatHistory = [];
 
 let clients = new Map();
 
+const fs = require('fs');
+const path = require('path');
+
 const server = http.createServer((req, res) => {
+    if (req.url === '/favicon.png') {
+        const faviconPath = path.join(__dirname, 'favicon.png');
+        fs.readFile(faviconPath, (err, data) => {
+            if (err) {
+                res.writeHead(404);
+                res.end();
+            } else {
+                res.writeHead(200, { 'Content-Type': 'image/x-icon' });
+                res.end(data);
+            }
+        });
+        return;
+    }
     const my_html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +30,8 @@ const server = http.createServer((req, res) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Let's Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
